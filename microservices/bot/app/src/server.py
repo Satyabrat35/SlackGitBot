@@ -30,6 +30,22 @@ def event():
     else:
         return "Invalid Token"
 
+
+@app.route('/repo', methods=['POST'])
+def repos():
+    data = request.form.to_dict()
+    print(data)
+    print("SlackToken: " + slackToken)
+    receivedToken = data["token"]
+    print("ReceivedToken: " + receivedToken)
+    if (receivedToken==slackToken):
+        receivedMessage= data["text"]
+        return getRepo(receivedMessage)
+    else:
+        return "Invalid Token"
+
+
+
 @app.route('/confirm', methods=['POST'])
 def confirm():
     req = request.form.to_dict()
@@ -46,6 +62,25 @@ def confirm():
 
 
 ##################### Utility functions ######################
+
+
+
+def getRepo(text):
+    slashparts = text.split('/')
+    url = 'https://api.github.com/repos/'+ slashparts[0] + '/' + slashparts[1]
+    req = requests.get(url)
+    resp = req.json()
+    finalstr = ""
+    resplist = [resp['language'],str(resp['forks']),str(resp['open_issues'])]
+    strlist = ["Majority of the repo is written in ","No of Forks made ","No of open issues for this repo is "]
+    for i in range(0,3):
+        strlist[i] = strlist[i] + resplist[i]
+    for j in range(0,2):
+        finalstr = finalstr + strlist[j] + '\n'
+    finalstr = finalstr + strlist[2]
+    return finalstr
+
+
 
 def sendConfirmation(id, message, responseUrl):
     payload = {
