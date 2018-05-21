@@ -45,6 +45,33 @@ def repos():
         return "Invalid Token"
 
 
+@app.route('/issue', methods=['POST'])
+def issues():
+    data = request.form.to_dict()
+    print(data)
+    print("SlackToken: " + slackToken)
+    receivedToken = data["token"]
+    print("ReceivedToken: " + receivedToken)
+    if (receivedToken==slackToken):
+        receivedMessage= data["text"]
+        return getIssue(receivedMessage)
+    else:
+        return "Invalid Token"
+
+
+@app.route('/branch', methods=['POST'])
+def branches():
+    data = request.form.to_dict()
+    print(data)
+    print("SlackToken: " + slackToken)
+    receivedToken = data["token"]
+    print("ReceivedToken: " + receivedToken)
+    if (receivedToken==slackToken):
+        receivedMessage= data["text"]
+        return getBranch(receivedMessage)
+    else:
+        return "Invalid Token"
+
 
 @app.route('/confirm', methods=['POST'])
 def confirm():
@@ -80,6 +107,44 @@ def getRepo(text):
     finalstr = finalstr + strlist[2]
     return finalstr
 
+
+
+def getIssue(text):
+    slashparts = text.split('/')
+    url = 'https://api.github.com/repos/'+ slashparts[0] + '/' + slashparts[1] + '/issues/' + slashparts[2]
+    r = requests.get(url)
+    resp = r.json()
+    finalstr = ""
+    if 'message' not in resp:
+        resplist = [resp['title'],resp['user']['login'],resp['state']]
+        strlist = ["Issue title: ","Issue was opened by ","The issue is "]
+        for i in range(0,3):
+            strlist[i] = strlist[i] + resplist[i]
+        for j in range(0,2):
+            finalstr = finalstr + strlist[j] + '\n'
+        finalstr = finalstr + strlist[2]
+        return finalstr
+    else:
+        finalstr = "We could not find the result" + '\n' + "Make sure that the particular issue exists"
+        return finalstr
+
+
+def getBranch(text):
+    slashparts = text.split('/')
+    url = 'https://api.github.com/repos/'+ slashparts[0] + '/' + slashparts[1] + '/branches/' + slashparts[2]
+    r = requests.get(url)
+    resp = r.json()
+    finalstr = ""
+    if 'message' not in resp:
+        resplist = [resp['commit']['author']['login'],resp['commit']['commit']['message']]
+        strlist = ["Author of this branch: ","Message: "]
+        for i in range(0,2):
+            strlist[i] = strlist[i] + resplist[i]
+        finalstr = finalstr + strlist[0] + '\n' + strlist[1]
+        return finalstr
+    else:
+        finalstr = "We could not find the result" + '\n' + "Are u sure about the typo :/ ??"
+        return finalstr
 
 
 def sendConfirmation(id, message, responseUrl):
