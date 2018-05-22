@@ -58,7 +58,7 @@ def issues():
     else:
         return "Invalid Token"
 
-
+"""
 @app.route('/branch', methods=['POST'])
 def branches():
     data = request.form.to_dict()
@@ -71,6 +71,21 @@ def branches():
         return getBranch(receivedMessage)
     else:
         return "Invalid Token"
+"""
+
+@app.route('/helpz', methods=['POST'])
+def helps():
+    data = request.form.to_dict()
+    print(data)
+    print("SlackToken: " + slackToken)
+    receivedToken = data["token"]
+    print("ReceivedToken: " + receivedToken)
+    if (receivedToken==slackToken):
+        receivedMessage= data["text"]
+        return getHelp(receivedMessage)
+    else:
+        return "Invalid Token"
+
 
 
 @app.route('/confirm', methods=['POST'])
@@ -98,14 +113,18 @@ def getRepo(text):
     req = requests.get(url)
     resp = req.json()
     finalstr = ""
-    resplist = [resp['language'],str(resp['forks']),str(resp['open_issues'])]
-    strlist = ["Majority of the repo is written in ","No of Forks made ","No of open issues for this repo is "]
-    for i in range(0,3):
-        strlist[i] = strlist[i] + resplist[i]
-    for j in range(0,2):
-        finalstr = finalstr + strlist[j] + '\n'
-    finalstr = finalstr + strlist[2]
-    return finalstr
+    if 'message' not in resp:
+        resplist = [resp['language'],str(resp['forks']),str(resp['open_issues']),resp['html_url']]
+        strlist = ["Majority of the repo is written in ","No of Forks made ","No of open issues for this repo is ","Check here: "]
+        for i in range(0,4):
+            strlist[i] = strlist[i] + resplist[i]
+        for j in range(0,3):
+            finalstr = finalstr + strlist[j] + '\n'
+        finalstr = finalstr + strlist[3]
+        return finalstr
+    else:
+        finalstr = "We could not find the result" + '\n' + "Make sure you entered the correct details"
+        return finalstr
 
 
 
@@ -116,19 +135,28 @@ def getIssue(text):
     resp = r.json()
     finalstr = ""
     if 'message' not in resp:
-        resplist = [resp['title'],resp['user']['login'],resp['state']]
-        strlist = ["Issue title: ","Issue was opened by ","The issue is "]
-        for i in range(0,3):
+        resplist = [resp['title'],resp['user']['login'],resp['state'],resp['html_url']]
+        strlist = ["Issue title: ","Issue was opened by ","The issue is ","Check here: "]
+        for i in range(0,4):
             strlist[i] = strlist[i] + resplist[i]
-        for j in range(0,2):
+        for j in range(0,3):
             finalstr = finalstr + strlist[j] + '\n'
-        finalstr = finalstr + strlist[2]
+        finalstr = finalstr + strlist[3]
         return finalstr
     else:
         finalstr = "We could not find the result" + '\n' + "Make sure that the particular issue exists"
         return finalstr
 
+    
+def getHelp(text):
+    str1 = "The Bot works on the following Slash commands: \n"
+    sl_str = ["/repo <org_name>/<repo_name> \n","/issue <org_name>/<repo_name>/<issue_no>"]
+    for i in range(0,2):
+        str1 = str1 + sl_str[i]
+    return str1
 
+
+"""
 def getBranch(text):
     slashparts = text.split('/')
     url = 'https://api.github.com/repos/'+ slashparts[0] + '/' + slashparts[1] + '/branches/' + slashparts[2]
@@ -136,17 +164,17 @@ def getBranch(text):
     resp = r.json()
     finalstr = ""
     if 'message' not in resp:
-        resplist = [resp['commit']['author']['login'],resp['commit']['commit']['message']]
-        strlist = ["Author of this branch: ","Message: "]
-        for i in range(0,2):
+        resplist = [resp['commit']['author']['login'],resp['commit']['commit']['message'],resp['html_url']]
+        strlist = ["Author of this branch: ","Message: ","Check here: "]
+        for i in range(0,3):
             strlist[i] = strlist[i] + resplist[i]
-        finalstr = finalstr + strlist[0] + '\n' + strlist[1]
+        finalstr = finalstr + strlist[0] + '\n' + strlist[1] + '\n' + strlist[2]
         return finalstr
     else:
         finalstr = "We could not find the result" + '\n' + "Are u sure about the typo :/ ??"
         return finalstr
 
-
+"""
 def sendConfirmation(id, message, responseUrl):
     payload = {
         "text": "Are you sure you want to send a message?",
