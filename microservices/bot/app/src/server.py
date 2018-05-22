@@ -58,7 +58,7 @@ def issues():
     else:
         return "Invalid Token"
 
-"""
+
 @app.route('/branch', methods=['POST'])
 def branches():
     data = request.form.to_dict()
@@ -71,7 +71,7 @@ def branches():
         return getBranch(receivedMessage)
     else:
         return "Invalid Token"
-"""
+
 
 @app.route('/helpz', methods=['POST'])
 def helps():
@@ -150,13 +150,12 @@ def getIssue(text):
     
 def getHelp(text):
     str1 = "The Bot works on the following Slash commands: \n"
-    sl_str = ["/repo <org_name>/<repo_name> \n","/issue <org_name>/<repo_name>/<issue_no>"]
-    for i in range(0,2):
+    sl_str = ["/repo <org_name>/<repo_name> \n","/issue <org_name>/<repo_name>/<issue_no> \n","/branch <org_name>/<repo_name>/<branch_name>"]
+    for i in range(0,3):
         str1 = str1 + sl_str[i]
     return str1
 
 
-"""
 def getBranch(text):
     slashparts = text.split('/')
     url = 'https://api.github.com/repos/'+ slashparts[0] + '/' + slashparts[1] + '/branches/' + slashparts[2]
@@ -164,17 +163,19 @@ def getBranch(text):
     resp = r.json()
     finalstr = ""
     if 'message' not in resp:
-        resplist = [resp['commit']['author']['login'],resp['commit']['commit']['message'],resp['html_url']]
+        resplist = [resp['commit']['author']['login'],resp['commit']['commit']['message'],resp['commit']['html_url']]
         strlist = ["Author of this branch: ","Message: ","Check here: "]
         for i in range(0,3):
             strlist[i] = strlist[i] + resplist[i]
-        finalstr = finalstr + strlist[0] + '\n' + strlist[1] + '\n' + strlist[2]
+        for j in range(0,2):
+            finalstr = finalstr + strlist[j] + '\n'
+        finalstr = finalstr + strlist[2]
         return finalstr
     else:
         finalstr = "We could not find the result" + '\n' + "Are u sure about the typo :/ ??"
         return finalstr
 
-"""
+
 def sendConfirmation(id, message, responseUrl):
     payload = {
         "text": "Are you sure you want to send a message?",
