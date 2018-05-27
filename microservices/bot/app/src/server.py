@@ -73,7 +73,7 @@ def branches():
         return "Invalid Token"
 
 
-@app.route('/helpz', methods=['POST'])
+@app.route('/helpme', methods=['POST'])
 def helps():
     data = request.form.to_dict()
     print(data)
@@ -83,6 +83,20 @@ def helps():
     if (receivedToken==slackToken):
         receivedMessage= data["text"]
         return getHelp(receivedMessage)
+    else:
+        return "Invalid Token"
+
+
+@app.route('/member', methods=['POST'])
+def members():
+    data = request.form.to_dict()
+    print(data)
+    print("SlackToken: " + slackToken)
+    receivedToken = data["token"]
+    print("ReceivedToken: " + receivedToken)
+    if (receivedToken==slackToken):
+        receivedMessage= data["text"]
+        return getMember(receivedMessage)
     else:
         return "Invalid Token"
 
@@ -150,8 +164,8 @@ def getIssue(text):
     
 def getHelp(text):
     str1 = "The Bot works on the following Slash commands: \n"
-    sl_str = ["/repo <org_name>/<repo_name> \n","/issue <org_name>/<repo_name>/<issue_no> \n","/branch <org_name>/<repo_name>/<branch_name>"]
-    for i in range(0,3):
+    sl_str = ["/repo <org_name>/<repo_name> \n","/issue <org_name>/<repo_name>/<issue_no> \n","/branch <org_name>/<repo_name>/<branch_name> \n","/member <org_name>"]
+    for i in range(0,4):
         str1 = str1 + sl_str[i]
     return str1
 
@@ -172,8 +186,26 @@ def getBranch(text):
         finalstr = finalstr + strlist[2]
         return finalstr
     else:
-        finalstr = "We could not find the result" + '\n' + "Are u sure about the typo :/ ??"
+        finalstr = "We could not find the result" + '\n' + "Are u sure about the typo :confused:??"
         return finalstr
+
+
+def getMember(text):
+    url = 'https://api.github.com/orgs/'+text+'/public_members'
+    r = requests.get(url)
+    resp = r.json()
+    finalstr = ""
+    fstr = ""
+    if 'message' not in resp:
+        i = len(resp)
+        for j in range(0,i):
+            fstr = fstr + resp[j]['login'] + " "
+        finalstr = "Your organisation has " + fstr + "as their public members"
+        return finalstr
+    else:
+        finalstr = "We could not find the result" + '\n' + "Make sure that the particular organisation exists :confused:"
+        return finalstr
+
 
 
 def sendConfirmation(id, message, responseUrl):
