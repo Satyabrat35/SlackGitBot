@@ -122,7 +122,11 @@ def confirm():
 
 
 def getRepo(text):
+    strtext = ""
     slashparts = text.split('/')
+    if text == "" or len(slashparts)<=1 or slashparts[1] == "":
+        strtext =  "Please enter the deatils in proper order"
+        return strtexts
     url = 'https://api.github.com/repos/'+ slashparts[0] + '/' + slashparts[1]
     req = requests.get(url)
     resp = req.json()
@@ -143,7 +147,11 @@ def getRepo(text):
 
 
 def getIssue(text):
+    strtext = ""
     slashparts = text.split('/')
+    if text == "" or len(slashparts)<=2 or slashparts[2] == "":
+        strtext = "Please enter the deatils in proper order"
+        return strtext
     url = 'https://api.github.com/repos/'+ slashparts[0] + '/' + slashparts[1] + '/issues/' + slashparts[2]
     r = requests.get(url)
     resp = r.json()
@@ -171,7 +179,11 @@ def getHelp(text):
 
 
 def getBranch(text):
+    strtext = ""
     slashparts = text.split('/')
+    if text == "" or len(slashparts)<=2 or slashparts[2] == "":
+        strtext = "Please enter the deatils in proper order"
+        return strtext
     url = 'https://api.github.com/repos/'+ slashparts[0] + '/' + slashparts[1] + '/branches/' + slashparts[2]
     r = requests.get(url)
     resp = r.json()
@@ -191,6 +203,10 @@ def getBranch(text):
 
 
 def getMember(text):
+    strtext = ""
+    if text == "":
+        strtext = "Please enter the deatils in proper order"
+        return strtext
     url = 'https://api.github.com/orgs/'+text+'/public_members'
     r = requests.get(url)
     resp = r.json()
