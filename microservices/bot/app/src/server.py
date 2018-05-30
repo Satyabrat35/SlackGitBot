@@ -101,6 +101,19 @@ def members():
         return "Invalid Token"
 
 
+@app.route('/tag', methods=['POST'])
+def tags():
+    data = request.form.to_dict()
+    print(data)
+    print("SlackToken: " + slackToken)
+    receivedToken = data["token"]
+    print("ReceivedToken: " + receivedToken)
+    if (receivedToken==slackToken):
+        receivedMessage= data["text"]
+        return getTag(receivedMessage)
+    else:
+        return "Invalid Token"
+
 
 @app.route('/confirm', methods=['POST'])
 def confirm():
@@ -141,7 +154,7 @@ def getRepo(text):
         finalstr = finalstr + strlist[3]
         return finalstr
     else:
-        finalstr = "We could not find the result" + '\n' + "Make sure you entered the correct details"
+        finalstr = "We could not find the result" + '\n' + "Make sure you entered the correct details :confused:"
         return finalstr
 
 
@@ -166,14 +179,14 @@ def getIssue(text):
         finalstr = finalstr + strlist[3]
         return finalstr
     else:
-        finalstr = "We could not find the result" + '\n' + "Make sure that the particular issue exists"
+        finalstr = "We could not find the result" + '\n' + "Make sure that the particular issue exists :confused:"
         return finalstr
 
     
 def getHelp(text):
-    str1 = "The Bot works on the following Slash commands: \n"
-    sl_str = ["/repo <org_name>/<repo_name> \n","/issue <org_name>/<repo_name>/<issue_no> \n","/branch <org_name>/<repo_name>/<branch_name> \n","/member <org_name>"]
-    for i in range(0,4):
+    str1 = ":robot_face: Bot works on the following Slash commands: \n"
+    sl_str = ["/repo <org_name>/<repo_name> \n","/issue <org_name>/<repo_name>/<issue_no> \n","/branch <org_name>/<repo_name>/<branch_name> \n","/member <org_name> \n","/tag <org_name>/<repo_name>"]
+    for i in range(0,5):
         str1 = str1 + sl_str[i]
     return str1
 
@@ -220,6 +233,28 @@ def getMember(text):
         return finalstr
     else:
         finalstr = "We could not find the result" + '\n' + "Make sure that the particular organisation exists :confused:"
+        return finalstr
+
+
+def getTag(text):
+    strtext = ""
+    slashparts = text.split('/')
+    if text == "" or len(slashparts)<=1 or slashparts[1] == "":
+        strtext =  "Please enter the deatils in proper order"
+        return strtexts
+    url = 'https://api.github.com/repos/'+ slashparts[0] + '/' + slashparts[1] +'/tags'
+    req = requests.get(url)
+    resp = req.json()
+    finalstr = ""
+    if 'message' not in resp:
+        i = len(resp)
+        if i != 0:
+            finalstr = "The most recent release present for this repo is " + resp[0]['name']
+        else:
+            finalstr = "No tags are present in this repo :disappointed:"
+        return finalstr
+    else:
+        finalstr = "We could not find the result" + '\n' + "Make sure you entered the correct details :confused:"
         return finalstr
 
 
