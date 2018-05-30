@@ -26,7 +26,7 @@ All of the code is in one file that you can read at: `microservices/bot/app/src/
 
 #### slash command callback request URL
  ```http
- POST /echo
+ POST /helpme
  Content-Type application/x-www-form-urlencoded
 
  command=/helpme
