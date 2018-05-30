@@ -1,4 +1,47 @@
-# SlackGitBot
-Slack Bot using Github APIs . Part of Hackdev challenge
+# SlackGitBot 
 
-Readme will be updated as soon as the Bot is ready!!!
+**This is slackbot you will have:**
+
+![](https://media.giphy.com/media/QKiWFh7KBfFMzVrt85/giphy.gif)
+
+This is a  slackbot that responds to slash commands and uses Github APIs. It allows users on a channel to post messages to the channel.
+
+**Features**:
+
+1. Receive command: `/xyz here's a message for the channel sent from an anonymous team member`
+2. Save the command data in the database (uses Hasura data APIs)
+3. Provides the user to details by getting response using git apis
+4. This Bot works on 6 slash commands which are deemed to be necessary for a better workflow in a community
+
+This slack bot builds on top the following slack APIs:
+
+1. [https://api.slack.com/custom-integrations/slash-commands](https://api.slack.com/custom-integrations/slash-commands)
+2. [https://api.slack.com/interactive-messages](https://api.slack.com/interactive-messages)
+3. [https://api.slack.com/methods/chat.postMessage](https://api.slack.com/methods/chat.postMessage)
+4. [https://developer.github.com/v3/?](https://developer.github.com/v3/?)
+
+### Codebase structure
+
+All of the code is in one file that you can read at: `microservices/bot/app/src/server.py`
+
+#### slash command callback request URL
+ ```http
+ POST /echo
+ Content-Type application/x-www-form-urlencoded
+
+ command=/helpme
+ text=Bot works on the ...
+ ...
+ ```
+
+As taken from: [https://api.slack.com/custom-integrations/slash-commands](https://api.slack.com/custom-integrations/slash-commands)
+
+This callback will take the message text and save it in the database.
+
+### Deployment guide
+
+Soon to be updated
+
+## Support
+
+If you happen to get stuck anywhere, please feel free to mail me at chimpu755@gmail.com. Also, if you find an error or a bug, you can raise an issue [here](https://github.com/Satyabrat35/SlackGitBot).
