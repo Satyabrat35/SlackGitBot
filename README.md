@@ -45,7 +45,7 @@ Soon to be updated
 ## Note
 
 If while sending slash commands through the bot you came across error something like this-
-![]({{site.baseurl}}/https://image.ibb.co/iffKDJ/error.png)
+![](https://image.ibb.co/iffKDJ/error.png)
 
 It might occur due to two possible reason- 
 
