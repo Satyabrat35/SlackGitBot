@@ -52,7 +52,8 @@ It might occur due to two possible reason-
 1.There might be a delay in the Api request. So try to execute the slash command, you will get the result.
 
 2.This might happen if the cluster might be sleeping. Wake him up and execute your command. 
-  CLuster uri- http://bot.boyishly25.hasura-app.io/
+  	
+Cluster uri- http://bot.boyishly25.hasura-app.io/
 
 ## Support
 
