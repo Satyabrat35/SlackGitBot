@@ -36,8 +36,6 @@ All of the code is in one file that you can read at: `microservices/bot/app/src/
 
 As taken from: [https://api.slack.com/custom-integrations/slash-commands](https://api.slack.com/custom-integrations/slash-commands)
 
-This callback will take the message text and save it in the database.
-
 ### Deployment guide
 
 Soon to be updated
