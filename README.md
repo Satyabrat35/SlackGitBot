@@ -42,6 +42,17 @@ This callback will take the message text and save it in the database.
 
 Soon to be updated
 
+## Note
+
+If while sending slash commands through the bot you came across error something like this-
+![]({{site.baseurl}}/https://image.ibb.co/iffKDJ/error.png)
+
+It might occur due to two possible reason- 
+
+1.There might be a delay in the Api request. So try to execute the slash command, you will get the result.
+2.This might happen if the cluster might be sleeping. Wake him up and execute your command. 
+  CLuster uri- http://bot.boyishly25.hasura-app.io/
+
 ## Support
 
 If you happen to get stuck anywhere, please feel free to mail me at chimpu755@gmail.com. Also, if you find an error or a bug, you can raise an issue [here](https://github.com/Satyabrat35/SlackGitBot).
